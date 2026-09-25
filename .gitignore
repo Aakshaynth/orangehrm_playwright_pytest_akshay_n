@@ -1,0 +1,40 @@
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.sqlite3
+
+# --- Virtual environment ---
+venv/
+.env/
+
+# --- Pytest ---
+.pytest_cache/
+.cache/
+*.pytest_cache/
+
+# --- Playwright ---
+playwright-report/
+test-results/
+trace.zip
+videos/
+screenshots/
+
+# --- Allure Reports (if used) ---
+allure-results/
+allure-report/
+
+# --- Reports ---
+reports/
+report.html
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.iml
+
+# --- OS / Misc ---
+.DS_Store
+Thumbs.db
