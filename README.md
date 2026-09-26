@@ -18,22 +18,8 @@ It includes both **API tests** and **UI tests**, with strict ordering to ensure 
 
 ## 📂 Project Structure
 
-orangehrm-playwright-pytest/
-│
-├── tests/
-│   ├── test_api_validations.py   # API validation tests
-│   ├── test_ui_validations.py    # UI validation tests
-│
-├── utilities/
-│   ├── api_util.py               # Custom Assertions class
-│
-├── Pages/                        # Page objects and locators
-│
-├── testdata.json                 # Centralized test data
-│
-├── reports/                      # Pytest HTML reports
-│
-└── README.md                     # Project documentation
+
+![Project Screenshot](./config/pjs.png)
 
 ---
 
