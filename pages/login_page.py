@@ -13,7 +13,7 @@ class LoginPage:
     # Method: Navigate to login page
     # Purpose: Opens the OrangeHRM login URL
     def goto(self, base_url: str):
-        self.page.goto(base_url)
+        self.page.goto(base_url, timeout=60000)  # Set a timeout of 60 seconds for navigation
 
     # Method: Perform login
     # Purpose: Enters username & password, clicks login button

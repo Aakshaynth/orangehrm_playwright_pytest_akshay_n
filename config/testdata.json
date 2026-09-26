@@ -1,9 +1,18 @@
 {
-  "base_url": "https://opensource-demo.orangehrmlive.com/",
-  "dashboard_url": "https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index",
-  "employee_data": {
-    "first_name": "John",
-    "last_name": "Doe",
-    "employee_id": "ORG_001"
-  }
+    "base_url": "https://opensource-demo.orangehrmlive.com/",
+    "login_url": "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login",
+    "dashboard_url": "https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index",
+    "employee_data": {
+        "first_name": "BrunoSYWZ5506",
+        "last_name": "FerrassioDBGOP732",
+        "employee_id": "J6ZBD691",
+        "employee_number": 250,
+        "jobtitle": "QA Engineer",
+        "employment_status": "Full-Time Permanent",
+        "added_success_toast": "Successfully Saved",
+        "updated_success_toast": "Successfully Updated"
+    },
+    "api": {
+        "base_url": "https://opensource-demo.orangehrmlive.com/web/index.php/api/v2/pim/employees"
+    }
 }

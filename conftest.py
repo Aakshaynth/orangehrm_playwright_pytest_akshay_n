@@ -28,36 +28,41 @@ def browser(playwright_instance):
 def page(browser):
     context = browser.new_context()
     page = context.new_page()
-    context.set_default_timeout(20000)
-    context.set_default_navigation_timeout(20000)
-    expect.set_options(timeout=20000)
+    context.set_default_timeout(30000)
+    context.set_default_navigation_timeout(30000)
+    expect.set_options(timeout=60000)
     yield page
     context.close()
 
 # Fixture: Test Data
 # Purpose: Loads test data from JSON file for data-driven testing.
 @pytest.fixture(scope="session")
-def test_data():
+def test_data() -> dict:
     file_path = "config/testdata.json"
-
-    # Load existing data
     if os.path.exists(file_path):
         with open(file_path, "r") as f:
             try:
-                data = json.load(f)
+                return json.load(f)
             except json.JSONDecodeError:
-                data = {}
-    else:
-        data = {}
+                return {}
+    return {}
 
-    # Helper function to update/add new data
+@pytest.fixture(scope="session")
+def test_data_updater(test_data):
+    file_path = "config/testdata.json"
+
     def update(new_data: dict):
-        data.update(new_data)
-        with open(file_path, "w") as f:
-            json.dump(data, f, indent=4)
+        # Deep merge instead of shallow overwrite
+        for key, value in new_data.items():
+            if isinstance(value, dict) and key in test_data and isinstance(test_data[key], dict):
+                test_data[key].update(value)
+            else:
+                test_data[key] = value
 
-    # Return both the data and the updater
-    return data, update
+        with open(file_path, "w") as f:
+            json.dump(test_data, f, indent=4)
+
+    return update
 
 # Fixture: Credentials
 # Purpose: Loads demo login credentials from JSON.
@@ -71,11 +76,16 @@ def credentials():
 # Fixture: Login + Logout
 # Purpose: Provides a logged-in page for tests and ensures logout after each test.
 @pytest.fixture(scope="function")
-def login_logout(page, credentials, test_data):
+def login_logout(page, credentials, test_data, test_data_updater):
     login = LoginPage(page)
     login.goto(test_data["base_url"])
     login.login(credentials["username"], credentials["password"])
     login.verify_successfull_login()
     yield page
-    logout = HeaderPanel(page)
-    logout.log_out()
+
+# Fixture: Session Cookie
+# Purpose: Extracts the 'orangehrm' session cookie after login for authenticated API calls.
+@pytest.fixture(scope="function")
+def session_cookie(login_logout):
+    cookies = login_logout.context.cookies()
+    return next(c['value'] for c in cookies if c['name'] == 'orangehrm')

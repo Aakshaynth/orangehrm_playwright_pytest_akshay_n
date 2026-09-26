@@ -1,4 +1,6 @@
+import time
 from playwright.sync_api import Page, expect
+from pytest_playwright.pytest_playwright import page
 
 class PIMPage:
     def __init__(self, page: Page):
@@ -35,9 +37,9 @@ class PIMPage:
     def save_employee(self):
         self.save_button.click()
 
-    def verify_employee_added_successfully_toast(self):
+    def verify_toast_message(self, expected_text: str):
         expect(self.toast_message).to_be_visible()
-        expect(self.toast_message).to_contain_text("Successfully Saved") #Assertion to check if the toast message contains the expected text
+        expect(self.toast_message).to_contain_text(expected_text) #Assertion to check if the toast message contains the expected text
 
     def fill_data_in_input_field_by_label(self, label: str, value: str):
         input_field = self.page.locator(f"//label[normalize-space(text())='{label}']/parent::div/following-sibling::div//input")
@@ -55,7 +57,25 @@ class PIMPage:
         menu.click()
 
     def select_dropdown_option(self, dropdown_label: str, option_text: str):
-        dropdown_by_label = self.page.locator(f"//label[normalize-space()='{dropdown_label}']/following::div[contains(@class,'oxd-select-text-input')]")
+        dropdown_by_label = self.page.locator(f"//label[contains(text(),'{dropdown_label}')]/parent::div/following-sibling::div")
         dropdown_by_label.click()
         dropdown_option = self.page.locator(f"//div[@role='listbox']//span[normalize-space()='{option_text}']")
         dropdown_option.click()
+
+    def fetch_input_value_by_label(self, label: str, option_text: str) -> str:
+        locator = self.page.locator(f"//label[contains(text(),'{label}')]/parent::div/following-sibling::div//div[contains(@class,'oxd-select-text-input')][contains(text(),'{option_text}')]")
+        locator.wait_for(state="visible", timeout=10000)  # Wait for the element to be visible
+        input_field = self.page.locator(f"//label[contains(text(),'{label}')]/parent::div/following-sibling::div//div[contains(@class,'oxd-select-text-input')]").inner_text()
+        return input_field
+
+    def test_capture_emp_id_and_store(self):
+        current_url = self.page.url
+        emp_number = current_url.split("empNumber/")[-1]
+        return emp_number
+
+    def click_delete_button_based_on_employee_id(self, employee_id: str, button_label):
+        delete_button = self.page.locator(f"//div[@class='oxd-table-card'][.//div[normalize-space(text())='{employee_id}']]//button/i[contains(@class,'bi-trash')]")
+        delete_button.click()
+        confirm_pop_button = self.page.locator(f"//div[@class='orangehrm-modal-footer']/button[contains(normalize-space(.),'{button_label}')]")
+        confirm_pop_button.wait_for(state="visible", timeout=10000)
+        confirm_pop_button.click()

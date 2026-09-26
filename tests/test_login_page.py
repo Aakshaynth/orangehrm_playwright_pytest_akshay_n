@@ -5,6 +5,7 @@ from pages.login_page import LoginPage
 # Purpose: Ensures user can log in successfully with valid credentials
 @pytest.mark.smoke
 @pytest.mark.regression
+@pytest.mark.order(1)
 def test_verify_user_able_to_login_successfully_with_valid_credentials(page, credentials, test_data):
     # Step 1: Create LoginPage object
     login = LoginPage(page)

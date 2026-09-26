@@ -26,10 +26,6 @@ screenshots/
 allure-results/
 allure-report/
 
-# --- Reports ---
-reports/
-report.html
-
 # --- IDE / Editor ---
 .vscode/
 .idea/
